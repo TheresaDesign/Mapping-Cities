@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flow Map with Leaflet</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ant-path/dist/leaflet-ant-path.min.js"></script>
+    <script src="OriginCountry_Geo-berlin.js"></script> <!-- Verlinkung der GeoJSON-Daten -->
+    <script src="Paris_Geo-europe.js"></script> <!-- GeoJSON-Daten für Paris -->
+    <script src="London_Geo-europe.js"></script> <!-- GeoJSON-Daten für London -->
+    <script src="OriginCountry_Geo-vienna.js"></script> <!-- GeoJSON-Daten für Wien -->
+    <script src="berlin-districts1.js" style="color:blue; border:60px"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([13.4050, 52.5200], 4);
+
+        // Add a tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 15,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Function to determine the color based on stay duration
+        function getColor(stayDuration) {
+            return stayDuration > 7 ? '#800026' :
+                   stayDuration > 5 ? '#BD0026' :
+                   stayDuration > 3 ? '#E31A1C' :
+                   stayDuration > 1 ? '#FC4E2A' :
+                                      '#FD8D3C';
+        }
+
+        // Function to determine the weight (thickness) of the line based on number of tourists
+        function getWeight(tourists) {
+            return tourists > 50000 ? 8 :
+                   tourists > 30000 ? 6 :
+                   tourists > 10000 ? 4 :
+                                      2;
+        }
+            
+        // Add GeoJSON layer to the map with styling
+        function addGeoJSONLayer(geojsonData) {
+            L.geoJSON(geojsonData, {
+                style: function (feature) {
+                    return {
+                        color: getColor(feature.properties.stay_duration),
+                        weight: getWeight(feature.properties.tourists),
+                        opacity: 0.6
+                    };
+                }
+            }).addTo(map);
+        }
+        
+        // Function to create a curved path using Leaflet-AntPath
+        function createAntPath(feature) {
+            return L.polyline.antPath(
+                feature.geometry.coordinates,
+                {
+                    color: getColor(feature.properties.stay_duration),
+                    weight: getWeight(feature.properties.tourists),
+                    opacity: 0.6,
+                    delay: 1000,
+                    dashArray: [10, 20],
+                    pulseColor: '#FFFFFF'
+                }
+            ).addTo(map);
+        }
+
+        // Add GeoJSON layer to the map with AntPath for styling
+        function addAntPathLayer(geojsonData) {
+            geojsonData.features.forEach(function(feature) {
+                createAntPath(feature);
+            });
+        }
+
+        // Beispiel: Berlin wird standardmäßig angezeigt
+        addGeoJSONLayer(geojsonData);
+        addAntPathLayer(geojsonData);
+
+        // Beispiel: Funktion zum Wechseln der Stadt
+        function switchCity(city) {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.GeoJSON) {
+                    map.removeLayer(layer);
+                }
+            });
+            if (city === "Berlin") {
+                addGeoJSONLayer(geojsonData);
+                addAntPathLayer(geojsonData);
+            } else if (city === "Paris") {
+                addGeoJSONLayer(parisData);
+                addAntPathLayer(parisData);
+            } else if (city === "London") {
+                addGeoJSONLayer(londonData);
+                addAntPathLayer(londonData);
+            } else if (city === "Wien") {
+                addGeoJSONLayer(wienData);
+                addAntPathLayer(wienData);
+            }
+        }
+
+            
+    </script>
+    <!-- Beispiel: Buttons zum Wechseln der Stadt -->
+    <button onclick="switchCity('Berlin')">Berlin</button>
+    <button onclick="switchCity('Paris')">Paris</button>
+    <button onclick="switchCity('London')">London</button>
+    <button onclick="switchCity('Wien')">Wien</button>
+
+    
+</body>
+</html>
