@@ -3,30 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interaktive Touristenkarte</title>
+    <title>Leaflet und GeoJSON Karte</title>
+    <!-- Einbinden der Leaflet CSS Datei -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #2c3e50;
+        /* Festlegen der Höhe des Kartenelements */
+        #map {
+            height: 600px;
+            width: 600px;
+            margin: auto;
         }
-        .map-container {
-            position: relative;
-        }
-        object {
-            width: 80vw;
-            height: auto;
+
+
+        #info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
-    <div class="map-container">
-        <object data="img/europe-map-tilted.svg"></object>
-        <!-- Externe SVG-Datei einbinden -->
-        <object id="map" data="map.svg" type="image/svg+xml"></object>
+    <!-- Div-Element, das die Karte enthalten wird -->
+    <div id="map">
+        <div id="info">
+            <h4>Land Informationen</h4>
+            <p id="info-name">Land: </p>
+            <p id="info-number">Touristen: </p>
+            <p id="info-length">Durchschnittliche Aufenthaltsdauer: </p>
+        </div>
     </div>
-    <script src="script.js"></script>
+   
+    <!-- Einbinden der Leaflet JavaScript Datei -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+    <script src="europe.js"></script>
+    <script>
+        // Initialisieren der Karte und Festlegen des Startpunkts und Zoom-Levels
+        var map = L.map('map').setView([52.5556, 13.55568224351552], 5);
+
+        // Hinzufügen einer Kartenkachel von OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+    
+          // Koordinaten von Berlin
+          var berlin = [52.5200, 13.4050];
+
+// Funktion, um Linien zu stilisieren
+function getStyle(properties) {
+    var tourists = properties.number;
+    var bednights = properties.bednights;
+
+    // Farbe basierend auf der Anzahl der Touristen
+    var color;
+    if (tourists > 10000000) {
+        color = 'red';
+    } else if (tourists > 5000000) {
+        color = 'orange';
+    } else if (tourists > 1000000) {
+        color = 'yellow';
+    } else {
+        color = 'green';
+    }
+
+    // Strichstärke basierend auf der Aufenthaltsdauer
+    var weight;
+    if (bednights > 5) {
+        weight = 8;
+    } else if (bednights > 3) {
+        weight = 6;
+    } else if (bednights > 1) {
+        weight = 4;
+    } else {
+        weight = 2;
+    }
+
+    return {
+        color: color,
+        weight: weight
+    };
+}
+
+// Funktion, um das Land hervorzuheben
+function highlightCountry(e) {
+    var layer = e.target;
+    layer.setStyle({
+        color: 'blue'
+    });
+}
+
+// Funktion, um die Hervorhebung des Landes zurückzusetzen
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    // Informationen im Info-Feld zurücksetzen
+    document.getElementById('info-name').textContent = "Land: ";
+    document.getElementById('info-number').textContent = "Touristen: ";
+    document.getElementById('info-length').textContent = "Durchschnittliche Aufenthaltsdauer: ";
+}
+
+// Linien von Landeszentren nach Berlin hinzufügen
+function addLinesToBerlin(geojsonData) {
+    geojsonData.features.forEach(function(feature) {
+        if (feature.geometry.type === 'MultiPolygon') {
+            // Berechne den Mittelpunkt (Zentroid) des Polygons
+            var centroid = turf.centroid(feature).geometry.coordinates;
+            var latlng = L.latLng(centroid[1], centroid[0]);
+
+            var lineStyle = getStyle(feature.properties);
+            
+            var line = L.polyline([latlng, berlin], lineStyle);
+
+            // Füge Hover-Ereignisse zu den Linien hinzu
+            line.on('mouseover', function(e) {
+                line.setStyle({weight: lineStyle.weight + 2});
+                document.getElementById('info-name').textContent = "Land: " + feature.properties.name;
+                document.getElementById('info-number').textContent = "Touristen: " + feature.properties.number;
+                document.getElementById('info-length').textContent = "Durchschnittliche Aufenthaltsdauer: " + feature.properties.bednights + " Nächte";
+            });
+
+            line.on('mouseout', function(e) {
+                line.setStyle(lineStyle);
+            });
+
+            line.addTo(map);
+        }
+    });
+}
+
+var geojson = L.geoJSON(europedata, {
+    style: function(feature) {
+        return {
+            color: 'black',
+            weight: 1
+        };
+    },
+    onEachFeature: function(feature, layer) {
+        layer.on({
+            mouseover: function(e) {
+                highlightCountry(e);
+                document.getElementById('info-name').textContent = "Land: " + feature.properties.name;
+                document.getElementById('info-number').textContent = "Touristen: " + feature.properties.number;
+                document.getElementById('info-length').textContent = "Durchschnittliche Aufenthaltsdauer: " + feature.properties.bednights + " Nächte";
+            },
+            mouseout: resetHighlight
+        });
+    }
+}).addTo(map);
+
+addLinesToBerlin(europedata);
+    </script>
 </body>
 </html>
