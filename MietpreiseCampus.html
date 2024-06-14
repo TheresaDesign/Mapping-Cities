@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
-        
         body { margin:0; padding:0; }
         #map { 
             height: 600px;
@@ -14,7 +13,7 @@
             margin: auto;
             background-color: white; 
         }
-        br{
+        br {
             color: blue;
         }
 
@@ -34,7 +33,7 @@
     <!-- Include Leaflet library -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <!-- Include the GeoJSON data file (you need to replace this with your own data file) -->
-     <script src="berlinMietpreise-Campus.js"></script>
+    <script src="berlinMietpreise-Campus.js"></script>
 
     <script>
         // Initialize the map and set its view to a chosen geographical point and zoom level
@@ -43,8 +42,8 @@
         // Add a tile layer (the map tiles) from OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 12,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            opacity:0,
+            opacity: 0,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         // Function to determine the color based on population density
@@ -52,10 +51,10 @@
             return d > 6.9 ? '#DD54B6' :
                    d > 6.6  ? '#A75EE1' :
                    d > 6.3  ? '#6F54DD' :
-                   d > 6   ? '#436BB6' :
-                   d > 5.7   ? '#A8C0F0' :
-                   d > 5.4   ? '#EFF4FF' :
-                              '#A8C0F0';
+                   d > 6.0  ? '#436BB6' :
+                   d > 5.7  ? '#6699CC' :
+                   d > 5.4  ? '#A8C0F0' :
+                              '#EFF4FF';
         }
 
         // Function to set the style for each feature (district)
@@ -70,10 +69,8 @@
             };
         }
 
-        //Marker für Campus
-        
+        // Marker für Campus
         var redIcon = L.icon({
-            //iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
             iconSize: [38, 95],
             iconAnchor: [22, 94],
             popupAnchor: [-3, -76]
@@ -83,42 +80,53 @@
         marker1.bindPopup("<h4>Humboltuniversität</h4><br>Hauptgebäude");
         marker1.on('mouseover', function (e) {
             this.openPopup();
-        });marker1.on('mouseout', function (e) {
+        });
+        marker1.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker2 = L.marker([52.4373,13.5390], {}).addTo(map);
         marker2.bindPopup("<h4>Humboltuniversität</h4><br>Campus Adlerhof");
         marker2.on('mouseover', function (e) {
             this.openPopup();
-        });marker2.on('mouseout', function (e) {
+        });
+        marker2.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker3 = L.marker([52.54574,13.3239], {}).addTo(map);
         marker3.bindPopup("<h4>Freie Universität Berlin</h4><br>Hauptcampus (Dahlem)");
         marker3.on('mouseover', function (e) {
             this.openPopup();
-        });marker3.on('mouseout', function (e) {
+        });
+        marker3.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker4 = L.marker([52.4372,13.3239], {}).addTo(map);
         marker4.bindPopup("<h4>Freie Universität Berlin</h4><br>Campus Lankwitz");
         marker4.on('mouseover', function (e) {
             this.openPopup();
-        });marker4.on('mouseout', function (e) {
+        });
+        marker4.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker5 = L.marker([ 52.4167,13.2478], {}).addTo(map);
         marker5.bindPopup("<h4>Freie Universität Berlin</h4><br>Campus Düppel");
         marker5.on('mouseover', function (e) {
             this.openPopup();
-        });marker5.on('mouseout', function (e) {
+        });
+        marker5.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker6 = L.marker([52.5113,13.3262], {}).addTo(map);
         marker6.bindPopup("<h4>Technische Universität Berlin</h4><br>Hauptcampus Charlottenburg");
         marker6.on('mouseover', function (e) {
             this.openPopup();
-        });marker6.on('mouseout', function (e) {
+        });
+        marker6.on('mouseout', function (e) {
             this.closePopup();
         });
 
@@ -126,52 +134,64 @@
         marker7.bindPopup("<h4>Universität der Künste Berlin</h4><br>Hauptstandort Charlottenburg");
         marker7.on('mouseover', function (e) {
             this.openPopup();
-        });marker7.on('mouseout', function (e) {
+        });
+        marker7.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker8 = L.marker([52.5457, 13.3616], {}).addTo(map);
         marker8.bindPopup("<h4>Universität der Künste</h4><br>Standort Berlin-Wedding");
         marker8.on('mouseover', function (e) {
             this.openPopup();
-        });marker8.on('mouseout', function (e) {
+        });
+        marker8.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker9 = L.marker([52.5232, 13.3929], {}).addTo(map);
         marker9.bindPopup("<h4>Charité – Universitätsmedizin Berlin</h4><br>Campus Mitte (Charitéplatz)");
         marker9.on('mouseover', function (e) {
             this.openPopup();
-        });marker9.on('mouseout', function (e) {
+        });
+        marker9.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker10 = L.marker([52.5267, 13.3531], {}).addTo(map);
         marker10.bindPopup("<h4>Charité – Universitätsmedizin Berlin</h4><br>Campus Virchow-Klinikum (Augustenburger Platz)");
         marker10.on('mouseover', function (e) {
             this.openPopup();
-        });marker10.on('mouseout', function (e) {
+        });
+        marker10.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker11 = L.marker([52.4559, 13.2816], {}).addTo(map);
         marker11.bindPopup("<h4>Charité – Universitätsmedizin Berlin</h4><br>Campus Benjamin Franklin (Hindenburgdamm)");
         marker11.on('mouseover', function (e) {
             this.openPopup();
-        });marker11.on('mouseout', function (e) {
+        });
+        marker11.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker12 = L.marker([52.4949, 13.5251], {}).addTo(map);
         marker12.bindPopup("<h4>Hochschule für Technik und Wirtschaft Berlin</h4><br>Campus Treskowallee");
         marker12.on('mouseover', function (e) {
             this.openPopup();
-        });marker12.on('mouseout', function (e) {
+        });
+        marker12.on('mouseout', function (e) {
             this.closePopup();
         });
+
         var marker13 = L.marker([52.4576,13.5206], {}).addTo(map);
         marker13.bindPopup("<h4>Hochschule für Technik und Wirtschaft Berlin</h4><br>Campus Wilhelminenhof");
         marker13.on('mouseover', function (e) {
             this.openPopup();
-        });marker13.on('mouseout', function (e) {
+        });
+        marker13.on('mouseout', function (e) {
             this.closePopup();
         });
-        
 
         // Function to highlight a feature (state) when hovered
         function highlightFeature(e) {
@@ -236,14 +256,14 @@
         var legend = L.control({position: 'bottomright'});
 
         legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 5.4, 5.7, 6, 6.3, 6.6, 6.9],
+            var div = L.DomUtil.create('div', 'legend'),
+                grades = [0, 5.4, 5.7, 6.0, 6.3, 6.6, 6.9],
                 labels = [];
 
             // Loop through our density intervals and generate a label with a colored square for each interval
             for (var i = 0; i < grades.length; i++) {
                 div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    '<i style="background:' + getColor(grades[i] + 0.1) + '"></i> ' +
                     grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
             }
 
