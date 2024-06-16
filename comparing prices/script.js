@@ -43,18 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
             { year: 2023, rent: 1120, food: 510, income: 3550 },
         ],
         Berlin: [
-            { year: 2012, rent: 600, food: 280, income: 1800 },
-            { year: 2013, rent: 620, food: 290, income: 1850 },
-            { year: 2014, rent: 640, food: 300, income: 1900 },
-            { year: 2015, rent: 660, food: 310, income: 1950 },
-            { year: 2016, rent: 680, food: 320, income: 2000 },
-            { year: 2017, rent: 700, food: 330, income: 2050 },
-            { year: 2018, rent: 720, food: 340, income: 2100 },
-            { year: 2019, rent: 740, food: 350, income: 2150 },
-            { year: 2020, rent: 760, food: 360, income: 2200 },
-            { year: 2021, rent: 780, food: 370, income: 2250 },
-            { year: 2022, rent: 800, food: 380, income: 2300 },
-            { year: 2023, rent: 820, food: 390, income: 2350 },
+            { year: 2012, rent: 7.66, food: 280, income: 1800 },
+            { year: 2013, rent: 8.47, food: 290, income: 1850 },
+            { year: 2014, rent: 9.03, food: 300, income: 1900 },
+            { year: 2015, rent: 11.65, food: 310, income: 1950 },
+            { year: 2016, rent: 10.46, food: 320, income: 2000 },
+            { year: 2017, rent: 11.40, food: 330, income: 2050 },
+            { year: 2018, rent: 12.65, food: 340, income: 2100 },
+            { year: 2019, rent: 13.41, food: 350, income: 2150 },
+            { year: 2020, rent: 15.11, food: 360, income: 2200 },
+            { year: 2021, rent: 15.14, food: 370, income: 2250 },
+            { year: 2022, rent: 23.57, food: 380, income: 2300 },
+            { year: 2023, rent: 21.60, food: 390, income: 2350 },
         ],
     };
 
@@ -172,3 +172,4 @@ document.addEventListener('DOMContentLoaded', function() {
         .attr("id", "tooltip")
         .attr("style", "position: absolute; background: #fff; padding: 5px; border: 1px solid #ccc; border-radius: 5px; display: none; pointer-events: none;");
 });
+//Quelle: https://www.wohnungsboerse.net/mietspiegel-Berlin/2825
